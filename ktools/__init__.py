@@ -31,4 +31,4 @@ def get_diff_from_initial_value(series):
     return (series / (series.iat[0] - 1))
 
 def convert_datetimeindex_to_timestamp(index):
-    return index.astype(np.int64) // 10**9
+    return index.astype(np.int64).astype(np.float) // 10**9
