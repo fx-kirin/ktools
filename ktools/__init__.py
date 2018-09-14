@@ -2,7 +2,9 @@
 
 __version__ = '0.1.0'
 __author__ = 'fx-kirin <ono.kirin@gmail.com>'
-__all__ = ['get_top_correlations', 'get_bottom_correlations']
+__all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_initial_value', 'convert_datetimeindex_to_timestamp']
+
+import numpy as np
 
 def get_redundant_pairs(df):
     '''Get diagonal and lower triangular pairs of correlation matrix'''
@@ -24,3 +26,9 @@ def get_bottom_correlations(df, n=5):
     labels_to_drop = get_redundant_pairs(df)
     au_corr = au_corr.drop(labels=labels_to_drop).sort_values(ascending=False)
     return au_corr[0:n]
+
+def get_diff_from_initial_value(series):
+    return (series / (series.iat[0] - 1))
+
+def convert_datetimeindex_to_timestamp(index):
+    return index.astype(np.int64) // 10**9
