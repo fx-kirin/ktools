@@ -5,6 +5,7 @@ __author__ = 'fx-kirin <ono.kirin@gmail.com>'
 __all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_initial_value', 'convert_datetimeindex_to_timestamp']
 
 import numpy as np
+import time
 
 def get_redundant_pairs(df):
     '''Get diagonal and lower triangular pairs of correlation matrix'''
@@ -31,4 +32,4 @@ def get_diff_from_initial_value(series):
     return (series / (series.iat[0] - 1))
 
 def convert_datetimeindex_to_timestamp(index):
-    return index.astype(np.int64).astype(np.float) // 10**9
+    return (index.astype(np.int64).astype(np.float) // 10**9) + time.timezone
