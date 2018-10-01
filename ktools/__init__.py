@@ -55,9 +55,8 @@ def bokeh_scatter(x, y):
 
     hover = HoverTool(
             tooltips=[
-                ("index", "$index"),
                 ("(x,y)", "($x, $y)"),
-                ("desc", "@desc"),
+                ("index", "@desc"),
             ]
         )
 
