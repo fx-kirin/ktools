@@ -6,6 +6,11 @@ __all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_ini
 
 import numpy as np
 import time
+from bokeh.plotting import figure, output_file, show, ColumnDataSource
+from bokeh.models import HoverTool
+from bokeh.io import output_notebook
+
+__is_bokeh_loaded = False
 
 def get_redundant_pairs(df):
     '''Get diagonal and lower triangular pairs of correlation matrix'''
@@ -33,3 +38,30 @@ def get_diff_from_initial_value(series):
 
 def convert_datetimeindex_to_timestamp(index):
     return (index.astype(np.int64).astype(np.float) // 10**9) + time.timezone
+
+def bokeh_scatter(x, y):
+    if not __is_bokeh_loaded:
+        output_notebook()
+        __is_bokeh_loaded = True
+
+    source = ColumnDataSource(
+            data=dict(
+                x=x,
+                y=y,
+                desc=x.index,
+            )
+        )
+
+    hover = HoverTool(
+            tooltips=[
+                ("index", "$index"),
+                ("(x,y)", "($x, $y)"),
+                ("desc", "@desc"),
+            ]
+        )
+
+    p = figure(plot_width=1600, plot_height=700, tools=[hover],
+               title="Mouse over the dots")
+
+    p.circle('x', 'y', size=5, source=source)
+    show(p)
