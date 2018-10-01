@@ -60,7 +60,7 @@ def bokeh_scatter(x, y):
             ]
         )
 
-    p = figure(plot_width=1600, plot_height=700, tools=[hover],
+    p = figure(plot_width=1600, plot_height=700, tools=[hover, 'pan', 'wheel_zoom'],
                title="Mouse over the dots")
 
     p.circle('x', 'y', size=5, source=source)
