@@ -2,7 +2,7 @@
 
 __version__ = '0.1.0'
 __author__ = 'fx-kirin <ono.kirin@gmail.com>'
-__all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_initial_value', 'convert_datetimeindex_to_timestamp', 'bokeh_scatter']
+__all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_initial_value', 'convert_datetimeindex_to_timestamp', 'bokeh_scatter', 'bokeh_categorical_scatter']
 
 import numpy as np
 import time
