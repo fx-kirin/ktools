@@ -1,6 +1,6 @@
 """ktools - kirin's toolkit."""
 
-__version__ = '0.1.4'
+__version__ = '0.1.5'
 __author__ = 'fx-kirin <ono.kirin@gmail.com>'
 __all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_initial_value', 
         'convert_datetimeindex_to_timestamp', 'bokeh_scatter', 'bokeh_categorical_scatter', 'bokeh_bar_plot']
@@ -77,7 +77,7 @@ def bokeh_categorical_scatter(df, x_label, y_label, category_label, desc=None):
 
     categories = df[category_label]
     category_size = len(categories.unique())
-    colors = sns.color_palette("deep", category_size).as_hex()
+    colors = sns.color_palette("hls", category_size).as_hex()
     name = df['業種'].name
     for i, category in enumerate(categories.unique()):
         p_x = df[df[name] == category][x_label]
@@ -96,7 +96,7 @@ def bokeh_categorical_scatter(df, x_label, y_label, category_label, desc=None):
     show(p)
     
 def bokeh_bar_plot(p_x):
-    palette = sns.color_palette("deep", len(p_x)).as_hex()
+    palette = sns.color_palette("hls", len(p_x)).as_hex()
     hover = HoverTool(
         tooltips=[
             ("(x,y)", "(@x, @y)"),
