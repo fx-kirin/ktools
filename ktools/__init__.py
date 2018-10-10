@@ -113,5 +113,5 @@ def bokeh_bar_plot(p_x):
                 color=palette
             ),
         )
-    p.vbar('x', top='y', width=0.9, source=source)
+    p.vbar('x', top='y', width=0.9, source=source, color='color')
     show(p)
