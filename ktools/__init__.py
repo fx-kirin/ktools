@@ -110,7 +110,8 @@ def bokeh_bar_plot(p_x):
             data=dict(
                 x=p_x.index.astype(str),
                 y=p_x.values
-            )
+            ),
+            color=palette
         )
-    p.vbar('x', top='y', width=0.9, source=source, palette=palette)
+    p.vbar('x', top='y', width=0.9, source=source)
     show(p)
