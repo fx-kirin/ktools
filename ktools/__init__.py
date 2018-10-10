@@ -96,7 +96,7 @@ def bokeh_categorical_scatter(df, x_label, y_label, category_label, desc=None):
     show(p)
     
 def bokeh_bar_plot(p_x):
-    palette = sns.color_palette("BuGn_r", len(p_x)).as_hex()
+    palette = sns.color_palette("hls", len(p_x)).as_hex()
     hover = HoverTool(
         tooltips=[
             ("(x,y)", "(@x, @y)"),
