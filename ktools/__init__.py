@@ -109,9 +109,9 @@ def bokeh_bar_plot(p_x):
     source = ColumnDataSource(
             data=dict(
                 x=p_x.index.astype(str),
-                y=p_x.values
+                y=p_x.values,
+                color=palette
             ),
-            color=palette
         )
     p.vbar('x', top='y', width=0.9, source=source)
     show(p)
