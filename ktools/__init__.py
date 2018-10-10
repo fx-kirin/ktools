@@ -77,7 +77,7 @@ def bokeh_categorical_scatter(df, x_label, y_label, category_label, desc=None):
 
     categories = df[category_label]
     category_size = len(categories.unique())
-    colors = viridis(category_size)
+    colors = sns.color_palette("deep", category_size).as_hex()
     name = df['業種'].name
     for i, category in enumerate(categories.unique()):
         p_x = df[df[name] == category][x_label]
