@@ -1,8 +1,9 @@
 """ktools - kirin's toolkit."""
 
-__version__ = '0.1.0'
+__version__ = '0.1.4'
 __author__ = 'fx-kirin <ono.kirin@gmail.com>'
-__all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_initial_value', 'convert_datetimeindex_to_timestamp', 'bokeh_scatter', 'bokeh_categorical_scatter']
+__all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_initial_value', 
+        'convert_datetimeindex_to_timestamp', 'bokeh_scatter', 'bokeh_categorical_scatter', 'bokeh_bar_plot']
 
 import numpy as np
 import time
@@ -63,7 +64,7 @@ def bokeh_scatter(x, y):
 def bokeh_categorical_scatter(df, x_label, y_label, category_label, desc=None):
     hover = HoverTool(
             tooltips=[
-                ("(x,y)", "($x, $y)"),
+                ("(x,y)", "(@x, @y)"),
                 ("index", "@desc"),
             ]
         )
@@ -91,4 +92,23 @@ def bokeh_categorical_scatter(df, x_label, y_label, category_label, desc=None):
         p.circle('x', 'y', size=5, source=source, color=colors[i], legend=str(category))
     p.legend.location = "top_right"
     p.legend.click_policy="hide"
+    show(p)
+    
+def bokeh_bar_plot(p_x):
+    hover = HoverTool(
+        tooltips=[
+            ("(x,y)", "(@x, @y)"),
+        ]
+    )
+    p = figure(x_range=p_x.index.astype(str).values, plot_width=800, plot_height=600, tools=[hover, 'wheel_zoom', 'pan', 'box_zoom', 'reset'],
+               title="Mouse over the dots")
+
+    p_desc = p_x.index
+    source = ColumnDataSource(
+            data=dict(
+                x=p_x.index.astype(str),
+                y=p_x.values
+            )
+        )
+    p.vbar('x', top='y', width=0.9, source=source)
     show(p)
