@@ -102,8 +102,7 @@ def bokeh_bar_plot(p_x):
             ("(x,y)", "(@x, @y)"),
         ]
     )
-    p = figure(x_range=p_x.index.astype(str).values, plot_width=800, plot_height=600, tools=[hover, 'wheel_zoom', 'pan', 'box_zoom', 'reset'],
-               title="Mouse over the dots")
+    p = figure(x_range=p_x.index.astype(str).values, plot_width=800, plot_height=600, tools=[hover, 'wheel_zoom', 'pan', 'box_zoom', 'reset'])
 
     p_desc = p_x.index
     source = ColumnDataSource(
