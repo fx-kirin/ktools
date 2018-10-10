@@ -11,6 +11,7 @@ from bokeh.plotting import figure, output_file, show, ColumnDataSource
 from bokeh.models import HoverTool
 from bokeh.io import output_notebook
 from bokeh.palettes import viridis
+import seaborn as sns
 
 def get_redundant_pairs(df):
     '''Get diagonal and lower triangular pairs of correlation matrix'''
@@ -95,6 +96,7 @@ def bokeh_categorical_scatter(df, x_label, y_label, category_label, desc=None):
     show(p)
     
 def bokeh_bar_plot(p_x):
+    palette = sns.color_palette("BuGn_r", len(p_x)).as_hex()
     hover = HoverTool(
         tooltips=[
             ("(x,y)", "(@x, @y)"),
@@ -110,5 +112,5 @@ def bokeh_bar_plot(p_x):
                 y=p_x.values
             )
         )
-    p.vbar('x', top='y', width=0.9, source=source)
+    p.vbar('x', top='y', width=0.9, source=source, palette=palette)
     show(p)
