@@ -3,7 +3,8 @@
 __version__ = '0.1.5'
 __author__ = 'fx-kirin <ono.kirin@gmail.com>'
 __all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_initial_value', 
-        'convert_datetimeindex_to_timestamp', 'bokeh_scatter', 'bokeh_categorical_scatter', 'bokeh_bar_plot']
+           'convert_datetimeindex_to_timestamp', 'bokeh_scatter', 'bokeh_categorical_scatter', 'bokeh_bar_plot',
+           'setup_logger']
 
 import numpy as np
 import time
@@ -12,6 +13,7 @@ from bokeh.models import HoverTool
 from bokeh.io import output_notebook
 from bokeh.palettes import viridis
 import seaborn as sns
+import logzero
 
 def get_redundant_pairs(df):
     '''Get diagonal and lower triangular pairs of correlation matrix'''
@@ -114,3 +116,8 @@ def bokeh_bar_plot(p_x):
         )
     p.vbar('x', top='y', width=0.9, source=source, color='color')
     show(p)
+
+def setup_logger(output_file=None):
+    formatter = logzero.LogFormatter('%(color)s[%(levelname)1.1s %(asctime)s %(name)s:%(module)s:%(lineno)d]%(end_color)s %(message)s')
+    logzero.__name__ = ''
+    logzero.setup_logger('', output_file)
