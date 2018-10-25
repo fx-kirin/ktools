@@ -133,7 +133,7 @@ def altair_init():
     #alt.data_transformers.enable('json')
 
 
-def altair_plot_bar_with_date_tab(df, x, y, dt, freq="year", agg_method="sum", w=1000, h=400):
+def altair_plot_bar_with_date_tab(df, x, y, dt, freq="year", agg_method="sum", w=1000, h=400, count_as_bar_width=True):
     """
     x,y の bar plot を dtのタブで選択 (shiftで複数選択可能)
     
@@ -147,6 +147,8 @@ def altair_plot_bar_with_date_tab(df, x, y, dt, freq="year", agg_method="sum", w
     
     agg_method: "sum","mean","median","count","min","max", ...
         https://vega.github.io/vega-lite/docs/aggregate.html#ops
+        
+    count_as_bar_width: Trueなら要素数をバーの太さに反映する
     
     freq: 
     "year", "yearquarter", "yearquartermonth", "yearmonth", "yearmonthdate", "yearmonthdatehours", "yearmonthdatehoursminutes"
@@ -164,6 +166,7 @@ def altair_plot_bar_with_date_tab(df, x, y, dt, freq="year", agg_method="sum", w
     selection_year = alt.selection_multi(encodings=['y'], empty="all") # fields には :N :Q などの型を入れたらダメ
     clr_year = alt.condition(selection_year, alt.ColorValue("#77c"), alt.ColorValue("#eee"))
     
+    bar_width = alt.Size("count()") if count_as_bar_width else alt.Size()
     
     y   ="{}({}):Q".format(agg_method,y)
     tab ="{}({})".format(freq,dt)
@@ -186,6 +189,7 @@ def altair_plot_bar_with_date_tab(df, x, y, dt, freq="year", agg_method="sum", w
         y=alt.Y(y,),
         #color=alt.Color(x, legend=None),
         color=x,
+        size=bar_width,
         tooltip=[x,y,alt.Tooltip("count()",aggregate="count", title="count")],
     ).transform_filter(
         selection_year,
@@ -198,4 +202,3 @@ def altair_plot_bar_with_date_tab(df, x, y, dt, freq="year", agg_method="sum", w
     return
 
 
->>>>>>> 8b6fb561f589b7737d35b4b399b97f3c3492b289
