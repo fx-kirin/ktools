@@ -1,10 +1,10 @@
 """ktools - kirin's toolkit."""
 
-__version__ = '0.1.5'
+__version__ = '0.1.6'
 __author__ = 'fx-kirin <ono.kirin@gmail.com>'
 __all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_initial_value', 
            'convert_datetimeindex_to_timestamp', 'bokeh_scatter', 'bokeh_categorical_scatter', 'bokeh_bar_plot',
-           'setup_logger']
+           'setup_logger','altair_init','altair_plot_bar_with_date_tab']
 
 import numpy as np
 import time
@@ -14,6 +14,9 @@ from bokeh.io import output_notebook
 from bokeh.palettes import viridis
 import seaborn as sns
 import logzero
+
+from IPython.display import display
+import altair as alt
 
 def get_redundant_pairs(df):
     '''Get diagonal and lower triangular pairs of correlation matrix'''
@@ -121,3 +124,77 @@ def setup_logger(output_file=None):
     formatter = logzero.LogFormatter('%(color)s[%(levelname)1.1s %(asctime)s %(name)s:%(module)s:%(lineno)d]%(end_color)s %(message)s')
     logzero.__name__ = ''
     logzero.setup_logger('', output_file)
+    
+
+def altair_init():
+    alt.renderers.enable('notebook')
+    alt.data_transformers.enable('default', max_rows=None)
+    alt.themes.enable('opaque') # for dark background color
+    #alt.data_transformers.enable('json')
+
+
+def altair_plot_bar_with_date_tab(df, x, y, dt, freq="year", agg_method="sum", w=1000, h=400):
+    """
+    x,y の bar plot を dtのタブで選択 (shiftで複数選択可能)
+    
+    
+    altair_plot_bar_with_date_tab(df, x="業種", y="profit", dt="決算発表日")
+    altair_plot_bar_with_date_tab(df, x="業種", y="profit", dt="決算発表日", w=1000, h=400,)
+    altair_plot_bar_with_date_tab(df, x="業種", y="profit", dt="決算発表日", freq="month",)
+    altair_plot_bar_with_date_tab(df, x="業種", y="profit", dt="決算発表日", freq="yearmonth", h=1000)
+    
+    dt: shiftを押しながらだと、複数選択可能
+    
+    agg_method: "sum","mean","median","count","min","max", ...
+        https://vega.github.io/vega-lite/docs/aggregate.html#ops
+    
+    freq: 
+    "year", "yearquarter", "yearquartermonth", "yearmonth", "yearmonthdate", "yearmonthdatehours", "yearmonthdatehoursminutes"
+    "quarter", "quartermonth"
+    "month", "monthdate"
+    "date" (Day of month, i.e., 1 - 31)
+    "day" (Day of week, i.e., Monday - Friday)
+    "hours", "hoursminutes", "hoursminutesseconds"
+    "minutes", "minutesseconds"
+    "seconds", "secondsmilliseconds"
+    "milliseconds"
+    https://vega.github.io/vega-lite/docs/timeunit.html
+    """
+    
+    selection_year = alt.selection_multi(encodings=['y'], empty="all") # fields には :N :Q などの型を入れたらダメ
+    clr_year = alt.condition(selection_year, alt.ColorValue("#77c"), alt.ColorValue("#eee"))
+    
+    
+    y   ="{}({}):Q".format(agg_method,y)
+    tab ="{}({})".format(freq,dt)
+
+    base = alt.Chart(data=df)
+
+    legend_year = base.mark_circle(size=300).encode(
+        alt.Y(tab),
+        color=clr_year,
+        tooltip=[tab],
+    ).add_selection(
+        selection_year,
+    ).properties(
+        height=h,
+        width=50,
+    )
+
+    chart = base.mark_bar().encode(
+        x=x,
+        y=alt.Y(y,),
+        #color=alt.Color(x, legend=None),
+        color=x,
+        tooltip=[x,y,alt.Tooltip("count()",aggregate="count", title="count")],
+    ).transform_filter(
+        selection_year,
+    ).properties(
+        width=w,
+        height=h,
+    )
+
+    display(legend_year | chart)
+    return
+
+
