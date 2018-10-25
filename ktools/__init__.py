@@ -124,11 +124,7 @@ def bokeh_bar_plot(p_x):
 def setup_logger(output_file=None):
     formatter = logzero.LogFormatter(fmt='%(color)s[%(levelname)1.1s %(asctime)s %(name)s:%(module)s:%(lineno)d]%(end_color)s %(message)s')
     logzero.__name__ = ''
-<<<<<<< HEAD
     logzero.setup_logger('', output_file, formatter=formatter)
-=======
-    logzero.setup_logger('', output_file)
-    
 
 def altair_init():
     alt.renderers.enable('notebook')
