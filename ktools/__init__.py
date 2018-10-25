@@ -1,6 +1,6 @@
 """ktools - kirin's toolkit."""
 
-__version__ = '0.1.5'
+__version__ = '0.1.7'
 __author__ = 'fx-kirin <ono.kirin@gmail.com>'
 __all__ = ['get_top_correlations', 'get_bottom_correlations', 'get_diff_from_initial_value', 
            'convert_datetimeindex_to_timestamp', 'bokeh_scatter', 'bokeh_categorical_scatter', 'bokeh_bar_plot',
@@ -14,6 +14,7 @@ from bokeh.io import output_notebook
 from bokeh.palettes import viridis
 import seaborn as sns
 import logzero
+import logging 
 
 def get_redundant_pairs(df):
     '''Get diagonal and lower triangular pairs of correlation matrix'''
@@ -80,7 +81,7 @@ def bokeh_categorical_scatter(df, x_label, y_label, category_label, desc=None):
     categories = df[category_label]
     category_size = len(categories.unique())
     colors = sns.color_palette("hls", category_size).as_hex()
-    name = df['業種'].name
+    name = df[category_label].name
     for i, category in enumerate(categories.unique()):
         p_x = df[df[name] == category][x_label]
         p_y = df[df[name] == category][y_label]
@@ -118,6 +119,6 @@ def bokeh_bar_plot(p_x):
     show(p)
 
 def setup_logger(output_file=None):
-    formatter = logzero.LogFormatter('%(color)s[%(levelname)1.1s %(asctime)s %(name)s:%(module)s:%(lineno)d]%(end_color)s %(message)s')
+    formatter = logzero.LogFormatter(fmt='%(color)s[%(levelname)1.1s %(asctime)s %(name)s:%(module)s:%(lineno)d]%(end_color)s %(message)s')
     logzero.__name__ = ''
-    logzero.setup_logger('', output_file)
+    logzero.setup_logger('', output_file, formatter=formatter)
