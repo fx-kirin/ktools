@@ -121,10 +121,43 @@ def bokeh_bar_plot(p_x):
     p.vbar('x', top='y', width=0.9, source=source, color='color')
     show(p)
 
-def setup_logger(output_file=None):
-    formatter = logzero.LogFormatter(fmt='%(color)s[%(levelname)1.1s %(asctime)s %(name)s:%(module)s:%(lineno)d]%(end_color)s %(message)s')
+
+def setup_logger(*args, **kwargs):
+    #formatter = logzero.LogFormatter(fmt='%(color)s[%(levelname)1.1s %(asctime)s %(name)s:%(module)s:%(lineno)d]%(end_color)s %(message)s')
     logzero.__name__ = ''
-    logzero.setup_logger('', output_file, formatter=formatter)
+    root_logger = logzero.setup_logger('', disableStderrLogger=True, *args, **kwargs)
+    ch = logging.StreamHandler(sys.stdout)
+    if 'level' in kwargs:
+        level = kwargs['level']
+    else:
+        level = logging.INFO
+    ch.setLevel(level)
+    if 'formatter' in kwargs:
+        formatter = formatter
+    else:
+        formatter = LogFormatter()
+    ch.setFormatter(formatter)
+    root_logger.addHandler(ch)
+    root_logger.info('test')
+    
+    for handler in root_logger.handlers:
+        if not isinstance(handler, logging.StreamHandler):
+            stderr_logger.addHandler(handler)
+    stderr_logger = logging.getLogger('STDERR')
+    stderr_logger.propagate = False
+    
+    stderr_handler = logging.StreamHandler(sys.stderr)
+    if 'level' in kwargs:
+        level = kwargs['level']
+    else:
+        level = logging.INFO
+    stderr_handler.setLevel(level)
+    if 'formatter' in kwargs:
+        formatter = formatter
+    else:
+        formatter = LogFormatter()
+    stderr_handler.setFormatter(formatter)
+    stderr_logger.addHandler(stderr_handler)
 
 def altair_init():
     alt.renderers.enable('notebook')
