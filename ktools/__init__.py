@@ -15,6 +15,7 @@ from bokeh.palettes import viridis
 import seaborn as sns
 import logzero
 import logging 
+import sys
 
 from IPython.display import display
 import altair as alt
