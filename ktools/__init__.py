@@ -136,10 +136,9 @@ def setup_logger(*args, **kwargs):
     if 'formatter' in kwargs:
         formatter = formatter
     else:
-        formatter = LogFormatter()
+        formatter = logzero.LogFormatter()
     ch.setFormatter(formatter)
     root_logger.addHandler(ch)
-    root_logger.info('test')
     
     for handler in root_logger.handlers:
         if not isinstance(handler, logging.StreamHandler):
@@ -148,24 +147,18 @@ def setup_logger(*args, **kwargs):
     stderr_logger.propagate = False
     
     stderr_handler = logging.StreamHandler(sys.stderr)
-    if 'level' in kwargs:
-        level = kwargs['level']
-    else:
-        level = logging.INFO
     stderr_handler.setLevel(level)
-    if 'formatter' in kwargs:
-        formatter = formatter
-    else:
-        formatter = LogFormatter()
     stderr_handler.setFormatter(formatter)
     stderr_logger.addHandler(stderr_handler)
+    
+def get_stderr_logger():
+    return logging.getLogger('STDERR')
 
 def altair_init():
     alt.renderers.enable('notebook')
     alt.data_transformers.enable('default', max_rows=None)
     alt.themes.enable('opaque') # for dark background color
     #alt.data_transformers.enable('json')
-
 
 def altair_plot_bar_with_date_tab(df, x, y, dt, freq="year", agg_method="sum", w=1000, h=400, count_as_bar_width=True):
     """
