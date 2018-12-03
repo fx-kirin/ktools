@@ -140,9 +140,6 @@ def setup_logger(*args, **kwargs):
     ch.setFormatter(formatter)
     root_logger.addHandler(ch)
     
-    for handler in root_logger.handlers:
-        if isinstance(handler, logging.FileHandler):
-            stderr_logger.addHandler(handler)
     stderr_logger = logging.getLogger('STDERR')
     stderr_logger.propagate = False
     
@@ -150,6 +147,10 @@ def setup_logger(*args, **kwargs):
     stderr_handler.setLevel(level)
     stderr_handler.setFormatter(formatter)
     stderr_logger.addHandler(stderr_handler)
+    
+    for handler in root_logger.handlers:
+        if isinstance(handler, logging.FileHandler):
+            stderr_logger.addHandler(handler)
     
 def get_stderr_logger():
     return logging.getLogger('STDERR')
