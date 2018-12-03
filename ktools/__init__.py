@@ -141,7 +141,7 @@ def setup_logger(*args, **kwargs):
     root_logger.addHandler(ch)
     
     for handler in root_logger.handlers:
-        if not isinstance(handler, logging.StreamHandler):
+        if isinstance(handler, logging.FileHandler):
             stderr_logger.addHandler(handler)
     stderr_logger = logging.getLogger('STDERR')
     stderr_logger.propagate = False
