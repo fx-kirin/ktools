@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ktools - kirin's toolkit."""
 
 __version__ = '0.1.8'
@@ -125,13 +126,21 @@ def bokeh_bar_plot(p_x):
 
 def setup_logger(*args, **kwargs):
     #formatter = logzero.LogFormatter(fmt='%(color)s[%(levelname)1.1s %(asctime)s %(name)s:%(module)s:%(lineno)d]%(end_color)s %(message)s')
-    logzero.__name__ = ''
-    root_logger = logzero.setup_logger('', disableStderrLogger=True, *args, **kwargs)
-    ch = logging.StreamHandler(sys.stdout)
     if 'level' in kwargs:
         level = kwargs['level']
     else:
         level = logging.INFO
+    if 'file_log_level' in kwargs:
+        file_log_level = kwargs['file_log_level']
+    else:
+        file_log_level = logging.DEBUG
+    
+    root_log_level = file_log_level if file_log_level < level else level
+    kwargs['level'] = root_log_level
+        
+    logzero.__name__ = ''
+    root_logger = logzero.setup_logger('', disableStderrLogger=True, *args, **kwargs)
+    ch = logging.StreamHandler(sys.stdout)
     ch.setLevel(level)
     if 'formatter' in kwargs:
         formatter = formatter
@@ -150,6 +159,7 @@ def setup_logger(*args, **kwargs):
     
     for handler in root_logger.handlers:
         if isinstance(handler, logging.FileHandler):
+            handler.setLevel(file_log_level)
             stderr_logger.addHandler(handler)
     
 def get_stderr_logger():
