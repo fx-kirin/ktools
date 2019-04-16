@@ -1,6 +1,6 @@
 import time
-
 import numpy as np
+import pandas as pd
 
 
 def get_diff_from_initial_value(series):
@@ -33,3 +33,14 @@ def get_bottom_correlations(df, n=5):
     labels_to_drop = get_redundant_pairs(df)
     au_corr = au_corr.drop(labels=labels_to_drop).sort_values(ascending=False)
     return au_corr[0:n]
+
+
+def read_sql(sql, con):
+    '''
+    read_sql with chunk 1000 not to make a big transaction.
+    '''
+    chunks = []
+    for chunk in pd.read_sql(sql, con, chunksize=1000):
+        chunks.append(chunk)
+
+    return pd.concat(chunks, axis=0)

@@ -26,6 +26,33 @@ def scatter(x, y):
     show(p)
 
 
+def multiple_scatter(x, multiple_y):
+    hover = HoverTool(
+        tooltips=[
+            ("(x,y)", "(@x, @y)"),
+            ("index", "@desc"),
+        ]
+    )
+
+    p = figure(plot_width=1600, plot_height=1000, tools=[hover, 'wheel_zoom', 'pan', 'box_zoom', 'reset'],
+               title="Mouse over the dots")
+
+    colors = sns.color_palette("hls", len(multiple_y)).as_hex()
+    for i, y in enumerate(multiple_y):
+        p_x = x
+        p_y = y
+        source = ColumnDataSource(
+            data=dict(
+                x=p_x,
+                y=p_y,
+            )
+        )
+        p.circle('x', 'y', size=5, source=source, color=colors[i])
+    p.legend.location = "top_right"
+    p.legend.click_policy = "hide"
+    show(p)
+
+
 def categorical_scatter(df, x_label, y_label, category_label, desc=None):
     hover = HoverTool(
         tooltips=[
