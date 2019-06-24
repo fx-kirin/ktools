@@ -43,4 +43,7 @@ def read_sql(sql, con):
     for chunk in pd.read_sql(sql, con, chunksize=1000):
         chunks.append(chunk)
 
-    return pd.concat(chunks, axis=0)
+    if len(chunks) > 0:
+        return pd.concat(chunks, axis=0)
+    else:
+        return None

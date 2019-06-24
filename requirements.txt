@@ -1,0 +1,6 @@
+ipython
+logzero
+logzero.egg
+numpy
+seaborn
+setuptools
