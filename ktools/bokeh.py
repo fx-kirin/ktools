@@ -81,7 +81,7 @@ def categorical_scatter(df, x_label, y_label, category_label, desc=None):
                 desc=p_desc,
             )
         )
-        p.circle('x', 'y', size=5, source=source, color=colors[i], legend_group=str(category))
+        p.circle('x', 'y', size=5, source=source, color=colors[i], legend_label=str(category))
     p.legend.location = "top_right"
     p.legend.click_policy = "hide"
     show(p)
