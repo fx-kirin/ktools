@@ -23,13 +23,13 @@ def make_sql(company, magic, from_time='2018-10-08'):
 
 
 def analyze_trade_pair(con, trade_pairs):
-    line = kani.LineCharts(width=600)
+    line = kani.LineCharts()
     all_df = None
     for trade_pair in trade_pairs:
         company, magic = trade_pair
         sql = make_sql(company, magic)
         df = read_sql(sql, con)
-        if len(df) > 0:
+        if df is not None and len(df) > 0:
             df.close_time.fillna(method='ffill', inplace=True)
             df.index = df.close_time
             df = df.reindex()
@@ -53,11 +53,11 @@ def analyze_trade_pair(con, trade_pairs):
         profit_plot.fillna(method='ffill', inplace=True)
         if len(profit_plot) > 0:
             line.add_chart("ALL", profit_plot)
-    return line.plot()
+    return line.plot(width=600)
 
 
 def analyze_company(con, company_names, from_time='2018-10-18'):
-    line = kani.LineCharts(width=600)
+    line = kani.LineCharts()
     for company_name in company_names:
         sql = "SELECT profit, close_time FROM bitcoin.%s_trade_history" % (company_name)
         sql += " where close_time > '%s' and position_status=5 and open_order_number is not null and close_order_number is not null" % (from_time)
@@ -73,7 +73,7 @@ def analyze_company(con, company_names, from_time='2018-10-18'):
             profit_plot.fillna(method='ffill', inplace=True)
             if len(profit_plot) > 0:
                 line.add_chart(company_name, profit_plot)
-    return line.plot()
+    return line.plot(width=600)
 
 
 def analyze_all(con, companies, from_time='2018-10-18'):
@@ -122,9 +122,9 @@ def plot_make(df, show_title=True):
     make_df.index = make_df['close_time']
     make = make_df['cumprofit'].resample('T').last()
     make.fillna(method='ffill', inplace=True)
-    line = kani.LineCharts(width=600)
+    line = kani.LineCharts()
     line.add_chart('make', make)
-    return line.plot()
+    return line.plot(width=600)
 
 
 def plot_make_and_take_with_magic_number(df, magic_number):

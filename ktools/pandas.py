@@ -47,3 +47,15 @@ def read_sql(sql, con):
         return pd.concat(chunks, axis=0)
     else:
         return None
+
+
+def show_all_columns():
+    return pd.option_context('display.max_columns', 99999)
+
+
+def show_all_rows():
+    return pd.option_context('display.max_rows', 99999)
+
+
+def show_all_dataframe():
+    return pd.option_context('display.max_rows', 999999, 'display.max_columns', 999999)
