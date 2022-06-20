@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="ktools",
-    version="0.2.14",
+    version="1.0.0",
     url="https://github.com/fx-kirin/ktools",
 
     author="fx-kirin",
