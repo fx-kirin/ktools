@@ -9,6 +9,8 @@
 """
 
 """
+import pandas as pd
+from kanirequests import KaniRequests
 
 
 def get_nehaba_limit(last_execution):
@@ -147,3 +149,22 @@ def get_price_limit(last_execution):
     if last_execution < 50000000:
         return 7000000
     return 10000000
+
+
+def get_ms_warrant_history(stock_code):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0",
+        'Accept-Language': 'ja,en-US;q=0.7,en;q=0.3',
+        'Connection': 'keep-alive',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Cache-Control': 'max-age=0'
+    }
+
+    session = KaniRequests(headers=headers)
+    result = session.get("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-SPWgeUiBs8pcrj9vFxYI7-9srSjfy2JDSoJ2-gZ4-bqhCltL2qvzZ2AMkNV7xZ72GH9_jnWqfHM0/pubhtml/sheet?headers=false&gid=0")
+    table = result.html.find("table")[0]
+    df = pd.read_html(table.raw_html.decode("utf8"), skiprows=4)[0]
+    df = df.iloc[:, 1:4]
+    df.columns = ["published_date", "stock_code", "name"]
+    return df[df["stock_code"] == str(stock_code)]
