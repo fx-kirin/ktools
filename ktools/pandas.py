@@ -8,7 +8,7 @@ def get_diff_from_initial_value(series):
 
 
 def convert_datetimeindex_to_timestamp(index):
-    return (index.astype(np.int64).astype(np.float) // 10**9) + time.timezone
+    return (index.astype(np.int64).astype(float) // 10**9) + time.timezone
 
 
 def get_redundant_pairs(df):
