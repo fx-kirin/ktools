@@ -11,6 +11,7 @@
 """
 import pandas as pd
 from kanirequests import KaniRequests
+from io import StringIO
 
 
 def get_nehaba_limit(last_execution):
@@ -164,7 +165,7 @@ def get_ms_warrant_history(stock_code):
     session = KaniRequests(headers=headers)
     result = session.get("https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-SPWgeUiBs8pcrj9vFxYI7-9srSjfy2JDSoJ2-gZ4-bqhCltL2qvzZ2AMkNV7xZ72GH9_jnWqfHM0/pubhtml/sheet?headers=false&gid=0")
     table = result.html.find("table")[0]
-    df = pd.read_html(table.raw_html.decode("utf8"), skiprows=4)[0]
+    df = pd.read_html(StringIO(table.raw_html.decode("utf8")), skiprows=4)[0]
     df = df.iloc[:, 1:4]
     df.columns = ["published_date", "stock_code", "name"]
     return df[df["stock_code"] == str(stock_code)]
